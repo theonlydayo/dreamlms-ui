@@ -1,90 +1,91 @@
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Link } from "react-router-dom";
+import AuthLayout from "../../components/AuthLayout/AuthLayout";
+import Input from "../../components/Input/Input";
+import PasswordInput from "../../components/PasswordInput/PasswordInput";
 import "./Auth.css";
 
 function Login() {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    setFormData((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    console.log(formData);
+    console.log("Remember me:", rememberMe);
+  };
+
   return (
-    <div className="auth-page">
-      <div className="auth-container">
-        <div className="auth-left">
-          <div className="auth-brand">
-            <img src="/images/logo.svg" alt="Dreams LMS" />
-          </div>
-
-          <div className="auth-illustration">
-            <img
-              src="/images/login-illustration.svg"
-              alt="Learning illustration"
-            />
-          </div>
-
-          <div className="auth-left-content">
-            <h1>Welcome to Dreams<span className="highlight">LMS</span> Courses</h1>
-            <p>
-              Platform designed to help organisations, educators and learners manage, deliver and track learning and training activities.
-            </p>
-          </div>
-        </div>
-
-        <div className="auth-right">
-          <div className="auth-form-wrapper">
-            <div className="mobile-brand">
-              <img src="/images/logo.svg" alt="Dreams LMS" />
-            </div>
-
-            <div className="auth-heading">
-              <h2>Welcome back!</h2>
-              <p>Sign in to continue learning with Dreams LMS.</p>
-            </div>
-
-            <form>
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  placeholder="Enter your email"
-                />
-              </div>
-
-              <div className="form-group">
-                <div className="password-label">
-                  <label htmlFor="password">Password</label>
-                  <Link to="/forgot-password">Forgot Password?</Link>
-                </div>
-
-                <div className="password-input">
-                  <input
-                    type="password"
-                    id="password"
-                    placeholder="Enter your password"
-                  />
-
-                  <button type="button" className="password-toggle">
-                    👁
-                  </button>
-                </div>
-              </div>
-
-              <div className="remember-row">
-                <label className="remember">
-                  <input type="checkbox" />
-                  <span>Remember me</span>
-                </label>
-              </div>
-
-              <button type="submit" className="auth-button">
-                Login
-              </button>
-            </form>
-
-            <p className="auth-switch">
-              Don't have an account?{" "}
-              <Link to="/register">Create Account</Link>
-            </p>
-          </div>
-        </div>
+    <AuthLayout description="Platform designed to help organisations, educators and learners manage, deliver and track learning and training activities.">
+      <div className="auth-heading">
+        <h2>Welcome back!</h2>
+        <p>Sign in to continue learning with Dreams LMS.</p>
       </div>
-    </div>
+
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+
+          <Input
+            id="email"
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <div className="password-label">
+            <label htmlFor="password">Password</label>
+            <Link to="/forgot-password">Forgot Password?</Link>
+          </div>
+
+          <PasswordInput
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="remember-row">
+          <label className="remember">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(event) => setRememberMe(event.target.checked)}
+            />
+            <span>Remember me</span>
+          </label>
+        </div>
+
+        <button type="submit" className="auth-button">
+          Login
+        </button>
+      </form>
+
+      <p className="auth-switch">
+        Don't have an account?{" "}
+        <Link to="/register">Create Account</Link>
+      </p>
+    </AuthLayout>
   );
 }
 

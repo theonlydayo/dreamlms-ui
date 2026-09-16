@@ -1,86 +1,69 @@
 import { Link } from "react-router-dom";
 import "./Home.css";
+import Header from "../components/Header/Header";
+import CategoryCard from "../components/CategoryCard/CategoryCard";
+import CourseCard from "../components/CourseCard/CourseCard";
+import BlogCard from "../components/BlogCard/BlogCard";
+import Footer from "../components/Footer/Footer";
 
 function Home() {
   return (
     <div className="home-page">
-      <header className="home-header">
-        <div className="home-header-container">
-          <Link to="/" className="home-logo">
-            <img src="/images/logo.svg" alt="Dreams LMS" />
-          </Link>
-
-          <nav className="home-nav">
-            <Link to="/" className="active">
-              Home
-            </Link>
-            <Link to="/courses">Courses</Link>
-            <Link to="/about">About Us</Link>
-            <Link to="/contact">Contact</Link>
-          </nav>
-
-          <div className="home-header-actions">
-            <Link to="/login" className="home-login">
-              Login
-            </Link>
-
-            <Link to="/register" className="home-register">
-              Register
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main>
         <section className="hero-section">
           <div className="hero-container">
             <div className="hero-content">
-              <span className="hero-badge">LEARN. GROW. SUCCEED.</span>
+              <span className="hero-badge">THE LEADER IN ONLINE LEARNING</span>
 
               <h1>
-                Learn new skills and
-                <span> build your future</span>
+                Engaging & Accessible
+                <span> Online Courses for All</span>
               </h1>
 
               <p>
-                Discover quality courses taught by experienced instructors
-                and take your skills to the next level.
+                Learn from expert instructors and gain the skills you need to
+                achieve your goals. Discover thousands of courses designed to
+                help you learn, grow and succeed.
               </p>
 
-              <div className="hero-actions">
-                <Link to="/courses" className="hero-primary-button">
-                  Explore Courses
-                </Link>
+              <div className="hero-search">
+                <input
+                  type="text"
+                  placeholder="Search for courses, tutors"
+                />
 
-                <Link to="/register" className="hero-secondary-button">
-                  Get Started
-                </Link>
-              </div>
-
-              <div className="hero-stats">
-                <div>
-                  <strong>10K+</strong>
-                  <span>Students</span>
-                </div>
-
-                <div>
-                  <strong>500+</strong>
-                  <span>Courses</span>
-                </div>
-
-                <div>
-                  <strong>100+</strong>
-                  <span>Instructors</span>
-                </div>
+                <button>⌕</button>
               </div>
             </div>
 
             <div className="hero-image">
+              <div className="hero-shape hero-shape-one"></div>
+              <div className="hero-shape hero-shape-two"></div>
+              <div className="hero-shape hero-shape-three"></div>
+
               <div className="hero-image-circle"></div>
 
               <img
                 src="/images/home-illustration.svg"
-                alt="Students learning"
+                alt="Student"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="trusted-section">
+          <div className="section-container trusted-container">
+            <div className="trusted-title">
+              <strong>Trusted By 500+</strong>
+              <span>Leading Universities & Companies</span>
+            </div>
+
+            <div className="trusted-logos">
+              <img
+                src="/images/trust.svg"
+                alt="Trusted Logos"
               />
             </div>
           </div>
@@ -88,166 +71,412 @@ function Home() {
 
         <section className="category-section">
           <div className="section-container">
-            <div className="section-heading">
+            <div className="section-heading centered-heading">
               <div>
-                <span>EXPLORE</span>
+                <span>EXPLORE OUR CATEGORIES</span>
                 <h2>Popular Categories</h2>
+                <p>
+                  Explore our top categories to find the perfect courses for
+                  your learning journey
+                </p>
               </div>
-
-              <Link to="/courses">View All</Link>
             </div>
 
             <div className="category-grid">
-              <Link to="/courses?category=development" className="category-card">
-                <div className="category-icon">💻</div>
-                <h3>Development</h3>
-                <p>120 Courses</p>
-              </Link>
+              <CategoryCard
+                name="Angular"
+                courses="50+ Courses"
+                icon="</>"
+                link="/courses?category=development"
+              />
 
-              <Link to="/courses?category=design" className="category-card">
-                <div className="category-icon">🎨</div>
-                <h3>Design</h3>
-                <p>85 Courses</p>
-              </Link>
+              <CategoryCard
+                name="React JS"
+                courses="50+ Courses"
+                icon="⚛"
+                link="/courses?category=react"
+              />
 
-              <Link to="/courses?category=business" className="category-card">
-                <div className="category-icon">💼</div>
-                <h3>Business</h3>
-                <p>75 Courses</p>
-              </Link>
+              <CategoryCard
+                name="Node JS"
+                courses="50+ Courses"
+                icon="⬡"
+                link="/courses?category=node"
+              />
 
-              <Link to="/courses?category=marketing" className="category-card">
-                <div className="category-icon">📈</div>
-                <h3>Marketing</h3>
-                <p>60 Courses</p>
-              </Link>
+              <CategoryCard
+                name="Docker"
+                courses="50+ Courses"
+                icon="◈"
+                link="/courses?category=docker"
+              />
+            </div>
+
+            <div className="category-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </section>
+
+        <section className="stats-section">
+          <div className="section-container stats-container">
+            <div className="stat-item">
+              <strong>145</strong>
+              <span>Online Courses</span>
+            </div>
+
+            <div className="stat-item">
+              <strong>23,989</strong>
+              <span>Expert Tutors</span>
+            </div>
+
+            <div className="stat-item">
+              <strong>80+</strong>
+              <span>Certified Courses</span>
+            </div>
+
+            <div className="stat-item">
+              <strong>58,789</strong>
+              <span>Online Students</span>
             </div>
           </div>
         </section>
 
         <section className="course-section">
           <div className="section-container">
-            <div className="section-heading">
+            <div className="section-heading centered-heading">
               <div>
-                <span>TOP COURSES</span>
+                <span>FEATURED COURSES</span>
                 <h2>Popular Courses</h2>
+                <p>
+                  Discover our featured courses, specially curated to help you
+                  gain in-demand skills
+                </p>
               </div>
-
-              <Link to="/courses">View All</Link>
             </div>
 
             <div className="course-grid">
-              <div className="course-card">
-                <div className="course-image">
-                  <img
-                    src="/images/course-1.jpg"
-                    alt="Web Development course"
-                  />
-                </div>
+              <CourseCard
+                image="/images/course-1.svg"
+                imageAlt="Information About UI UX Design"
+                category="Design"
+                title="Information About UI/UX Design & Development"
+                lessons={12}
+                students={30}
+                rating={4.8}
+                price="$49"
+              />
 
-                <div className="course-content">
-                  <span>Development</span>
-                  <h3>Complete Web Development Bootcamp</h3>
+              <CourseCard
+                image="/images/course-2.svg"
+                imageAlt="Wordpress course"
+                category="Development"
+                title="Wordpress for Beginners - Master Wordpress Quickly"
+                lessons={18}
+                students={25}
+                rating={4.9}
+                price="$39"
+              />
 
-                  <div className="course-info">
-                    <span>⭐ 4.8</span>
-                    <span>24 Lessons</span>
-                  </div>
+              <CourseCard
+                image="/images/course-3.svg"
+                imageAlt="Sketch course"
+                category="Design"
+                title="Sketch from A to Z (2026): Become an App Designer"
+                lessons={15}
+                students={50}
+                rating={5.0}
+                price="Free"
+              />
 
-                  <div className="course-footer">
-                    <strong>$49</strong>
-                    <Link to="/courses">View Course</Link>
-                  </div>
+              <CourseCard
+                image="/images/course-4.svg"
+                imageAlt="Angular course"
+                category="Development"
+                title="Learn Angular Fundamentals From Beginning"
+                lessons={16}
+                students={31}
+                rating={4.8}
+                price="$45"
+              />
+
+              <CourseCard
+                image="/images/course-5.svg"
+                imageAlt="Developer course"
+                category="Development"
+                title="CP Developers Double Your Coding Speed with Visual Studio"
+                lessons={22}
+                students={30}
+                rating={4.7}
+                price="Free"
+              />
+
+              <CourseCard
+                image="/images/course-6.svg"
+                imageAlt="Responsive world course"
+                category="Development"
+                title="Build Responsive Real World Websites with HTML5 and CSS3"
+                lessons={20}
+                students={25}
+                rating={4.9}
+                price="$59"
+              />
+            </div>
+
+            <div className="course-view-all">
+              <Link to="/courses">View All Courses</Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="skills-section">
+          <div className="section-container skills-container">
+            <div className="skills-intro">
+              <span>WHY CHOOSE US</span>
+              <h2>
+                Master the skills
+                <br />
+                to drive your career
+              </h2>
+
+              <p>
+                Get certified, master modern tech skills, and train at your own
+                pace. Learn from expert instructors and build the future you
+                want.
+              </p>
+
+              <div className="skills-buttons">
+                <Link to="/courses">Join Courses</Link>
+                <Link to="/about">Learn More</Link>
+              </div>
+            </div>
+
+            <div className="skills-list">
+              <div className="skill-item">
+                <div className="skill-icon">✓</div>
+                <div>
+                  <h3>Stay motivated with engaging instructors</h3>
+                  <p>
+                    Learn from experts who make complex topics simple and
+                    interesting.
+                  </p>
                 </div>
               </div>
 
-              <div className="course-card">
-                <div className="course-image">
-                  <img
-                    src="/images/course-2.jpg"
-                    alt="UI UX Design course"
-                  />
-                </div>
-
-                <div className="course-content">
-                  <span>Design</span>
-                  <h3>UI/UX Design Masterclass</h3>
-
-                  <div className="course-info">
-                    <span>⭐ 4.9</span>
-                    <span>18 Lessons</span>
-                  </div>
-
-                  <div className="course-footer">
-                    <strong>$39</strong>
-                    <Link to="/courses">View Course</Link>
-                  </div>
+              <div className="skill-item">
+                <div className="skill-icon">✓</div>
+                <div>
+                  <h3>Keep up with the latest in cloud</h3>
+                  <p>
+                    Stay ahead with practical, modern and industry-ready
+                    courses.
+                  </p>
                 </div>
               </div>
 
-              <div className="course-card">
-                <div className="course-image">
-                  <img
-                    src="/images/course-3.jpg"
-                    alt="Digital Marketing course"
-                  />
+              <div className="skill-item">
+                <div className="skill-icon">✓</div>
+                <div>
+                  <h3>Get certified with 100+ certification courses</h3>
+                  <p>
+                    Earn certificates that showcase your skills to employers.
+                  </p>
                 </div>
+              </div>
 
-                <div className="course-content">
-                  <span>Marketing</span>
-                  <h3>Digital Marketing Fundamentals</h3>
-
-                  <div className="course-info">
-                    <span>⭐ 4.7</span>
-                    <span>20 Lessons</span>
-                  </div>
-
-                  <div className="course-footer">
-                    <strong>$35</strong>
-                    <Link to="/courses">View Course</Link>
-                  </div>
+              <div className="skill-item">
+                <div className="skill-icon">✓</div>
+                <div>
+                  <h3>Build skills your way, from labs to courses</h3>
+                  <p>
+                    Choose flexible learning paths that fit your goals.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="cta-section">
-          <div className="cta-container">
-            <div>
-              <h2>Ready to start learning?</h2>
-              <p>
-                Join thousands of students and start building the skills you
-                need for your future.
-              </p>
+        <section className="instructor-section">
+          <div className="section-container instructor-container">
+            <div className="instructor-images">
+              <img
+                src="/images/instructors-grid.svg"
+                alt=""
+              />
             </div>
 
-            <Link to="/register">Get Started</Link>
+            <div className="instructor-content">
+              <span>MEET OUR INSTRUCTORS</span>
+              <h2>Experienced Course Instructor</h2>
+              <p>
+                An award-winning course management system designed to help
+                educators create engaging courses, share knowledge and inspire
+                learners.
+              </p>
+
+              <p>
+                Our instructors bring real-world experience and practical
+                knowledge to every course.
+              </p>
+
+              <Link to="/instructors">Explore Now</Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="mentor-section">
+          <div className="section-container mentor-container">
+            <div className="mentor-content">
+              <span>BECOME AN INSTRUCTOR</span>
+
+              <h2>
+                Want to share your
+                <br />
+                knowledge? Join us a Mentor
+              </h2>
+
+              <p>
+                High-quality video of video instructor could quickly use your
+                skills to teach others and grow your career.
+              </p>
+
+              <ul>
+                <li>✓ Access Your Classes anywhere</li>
+                <li>✓ Flexible Course Plan</li>
+                <li>✓ Quality Assurance</li>
+                <li>✓ Get Free Mentors</li>
+                <li>✓ Your New Path to Success</li>
+              </ul>
+
+              <Link to="/register">Start Teaching Today</Link>
+            </div>
+
+            <div className="mentor-image">
+              <div className="mentor-number mentor-number-one">
+                <strong>100+</strong>
+                <span>Expert Tutors</span>
+              </div>
+
+              <div className="mentor-number mentor-number-two">
+                <strong>80+</strong>
+                <span>Courses</span>
+              </div>
+
+              <div className="mentor-number mentor-number-three">
+                <strong>50K+</strong>
+                <span>Approved</span>
+              </div>
+
+              <img
+                src="/images/instructor.svg"
+                alt="Become a mentor"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="testimonial-section">
+          <div className="section-container">
+            <div className="section-heading centered-heading light-heading">
+              <div>
+                <span>TESTIMONIALS</span>
+                <h2>What our learners say</h2>
+                <p>
+                  We are a very happy because we have a happy customer
+                </p>
+              </div>
+            </div>
+
+            <div className="testimonial-container">
+              <div className="testimonial-quote">“</div>
+              <div className="testimonial-card">
+                <img 
+                  src="/images/testimonial.svg" 
+                  alt="" 
+                />
+              </div>
+
+              {/* <div className="testimonial-card">
+                <p>
+                  Exactly what I was looking for. You will not regret it. It
+                  really saves me time and effort. Still skills is what our
+                  business lacked.
+                </p>
+
+                <strong>Hawkins</strong>
+                <span>UI/UX Designer</span>
+
+                <div className="testimonial-stars">★★★★★</div>
+              </div> */}
+
+              {/* <div className="testimonial-image">
+                <img
+                  src="/images/testimonial.svg"
+                  alt="Happy student"
+                />
+              </div> */}
+            </div>
+          </div>
+        </section>
+
+        <section className="blog-section">
+          <div className="section-container">
+            <div className="section-heading centered-heading">
+              <div>
+                <span>OUR BLOG</span>
+                <h2>Latest Blogs</h2>
+                <p>
+                  Follow the latest and most useful articles on students'
+                  blogs
+                </p>
+              </div>
+            </div>
+
+            <div className="blog-grid">
+              <BlogCard
+                image="/images/blog-1.svg"
+                imageAlt="Programming knowledge"
+                category="Development"
+                title="Mastering Programming with a Technical Knowledge"
+                description="Learning to code can be overwhelming, but here are some tips to make it easier."
+                author="Alex Smith"
+                date="05 Aug 2026"
+              />
+
+              <BlogCard
+                image="/images/blog-2.svg"
+                imageAlt="Coding skills"
+                category="Technology"
+                title="How to Level Up Your Coding Skills with the Help of a Mentor"
+                description="Whether you're a beginner or an experienced coder, this blog will explain how learning can help."
+                author="John Carter"
+                date="18 Aug 2026"
+              />
+
+              <BlogCard
+                image="/images/blog-3.svg"
+                imageAlt="Technology world"
+                category="Learning"
+                title="Navigating the Tech World: The Ultimate Guide"
+                description="From tech trends to tips and ever-changing tech career paths, stay informed."
+                author="John Smith"
+                date="02 Sep 2026"
+              />
+            </div>
+
+            <div className="blog-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
           </div>
         </section>
       </main>
 
-      <footer className="home-footer">
-        <div className="footer-container">
-          <div className="footer-brand">
-            <img src="/images/logo.svg" alt="Dreams LMS" />
-            <p>
-              Empowering learners with the skills they need to succeed.
-            </p>
-          </div>
-
-          <div className="footer-links">
-            <Link to="/courses">Courses</Link>
-            <Link to="/about">About Us</Link>
-            <Link to="/contact">Contact</Link>
-            <Link to="/login">Login</Link>
-          </div>
-        </div>
-
-        <div className="footer-bottom">
-          <p>© 2026 Dreams LMS. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

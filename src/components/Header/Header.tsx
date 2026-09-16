@@ -5,7 +5,7 @@ function Header() {
     <header className="home-header">
       <div className="home-header-container">
         <Link to="/" className="home-logo">
-          <img src="/images/logo.svg" alt="Dreams LMS" />
+          <img src="/images/home-logo.svg" alt="Dreams LMS" />
         </Link>
 
         <nav className="home-nav">

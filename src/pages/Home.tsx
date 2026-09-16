@@ -46,7 +46,7 @@ function Home() {
               <div className="hero-image-circle"></div>
 
               <img
-                src="/images/home-illustration.svg"
+                src="/images/home-illustration.png"
                 alt="Student"
               />
             </div>
@@ -159,7 +159,7 @@ function Home() {
 
             <div className="course-grid">
               <CourseCard
-                image="/images/course-1.svg"
+                image="/images/course-1.jpg"
                 imageAlt="Information About UI UX Design"
                 category="Design"
                 title="Information About UI/UX Design & Development"
@@ -170,7 +170,7 @@ function Home() {
               />
 
               <CourseCard
-                image="/images/course-2.svg"
+                image="/images/course-2.jpg"
                 imageAlt="Wordpress course"
                 category="Development"
                 title="Wordpress for Beginners - Master Wordpress Quickly"
@@ -181,7 +181,7 @@ function Home() {
               />
 
               <CourseCard
-                image="/images/course-3.svg"
+                image="/images/course-3.jpg"
                 imageAlt="Sketch course"
                 category="Design"
                 title="Sketch from A to Z (2026): Become an App Designer"
@@ -192,7 +192,7 @@ function Home() {
               />
 
               <CourseCard
-                image="/images/course-4.svg"
+                image="/images/course-4.jpg"
                 imageAlt="Angular course"
                 category="Development"
                 title="Learn Angular Fundamentals From Beginning"
@@ -203,7 +203,7 @@ function Home() {
               />
 
               <CourseCard
-                image="/images/course-5.svg"
+                image="/images/course-5.jpg"
                 imageAlt="Developer course"
                 category="Development"
                 title="CP Developers Double Your Coding Speed with Visual Studio"
@@ -214,7 +214,7 @@ function Home() {
               />
 
               <CourseCard
-                image="/images/course-6.svg"
+                image="/images/course-6.jpg"
                 imageAlt="Responsive world course"
                 category="Development"
                 title="Build Responsive Real World Websites with HTML5 and CSS3"
@@ -303,8 +303,8 @@ function Home() {
           <div className="section-container instructor-container">
             <div className="instructor-images">
               <img
-                src="/images/instructors-grid.svg"
-                alt=""
+                src="/images/instructors-grid.png"
+                alt="Instructors"
               />
             </div>
 
@@ -371,7 +371,7 @@ function Home() {
               </div>
 
               <img
-                src="/images/instructor.svg"
+                src="/images/instructor.png"
                 alt="Become a mentor"
               />
             </div>
@@ -394,7 +394,7 @@ function Home() {
               <div className="testimonial-quote">“</div>
               <div className="testimonial-card">
                 <img 
-                  src="/images/testimonial.svg" 
+                  src="/images/testimonial.png" 
                   alt="" 
                 />
               </div>
@@ -437,7 +437,7 @@ function Home() {
 
             <div className="blog-grid">
               <BlogCard
-                image="/images/blog-1.svg"
+                image="/images/blog-1.jpg"
                 imageAlt="Programming knowledge"
                 category="Development"
                 title="Mastering Programming with a Technical Knowledge"
@@ -447,7 +447,7 @@ function Home() {
               />
 
               <BlogCard
-                image="/images/blog-2.svg"
+                image="/images/blog-2.jpg"
                 imageAlt="Coding skills"
                 category="Technology"
                 title="How to Level Up Your Coding Skills with the Help of a Mentor"
@@ -457,7 +457,7 @@ function Home() {
               />
 
               <BlogCard
-                image="/images/blog-3.svg"
+                image="/images/blog-3.jpg"
                 imageAlt="Technology world"
                 category="Learning"
                 title="Navigating the Tech World: The Ultimate Guide"

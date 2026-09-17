@@ -1,6 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 function Header() {
+  const navigate = useNavigate();
+  const { user, isAuthenticated, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
     <header className="home-header">
       <div className="home-header-container">
@@ -21,13 +30,31 @@ function Header() {
         </nav>
 
         <div className="home-header-actions">
-          <Link to="/login" className="home-login">
-            Login
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link to="/dashboard" className="home-login">
+                {user?.name}
+              </Link>
 
-          <Link to="/register" className="home-register">
-            Register
-          </Link>
+              <button
+                type="button"
+                className="home-register"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="home-login">
+                Login
+              </Link>
+
+              <Link to="/register" className="home-register">
+                Register
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

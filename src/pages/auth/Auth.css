@@ -259,6 +259,15 @@
   color: #ff4667;
 }
 
+.auth-error {
+  margin: 0 0 15px;
+  padding: 10px 12px;
+  border-radius: 7px;
+  background: #fff1f3;
+  color: #d92d20;
+  font-size: 13px;
+}
+
 @media (max-width: 1000px) {
   .auth-left {
     padding: 25px 35px;

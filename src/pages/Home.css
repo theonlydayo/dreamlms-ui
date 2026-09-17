@@ -69,9 +69,20 @@
   border: 1px solid rgba(255, 255, 255, 0.45);
 }
 
+.home-login:hover {
+  background: #ff5574;
+}
+
 .home-register {
   color: #ffffff;
   background: #ff5574;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+
+}
+
+.home-register:hover {
+  color: #ffffff;
+  background: #3b006b;
 }
 
 .hero-section {

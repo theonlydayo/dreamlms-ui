@@ -10,8 +10,11 @@ type User = {
   name: string;
   email: string;
   role: "student" | "instructor";
+  phone: string;
+  gender: string;
+  bio: string;
+  createdAt: string;
 };
-
 type AuthContextType = {
   user: User | null;
   token: string | null;

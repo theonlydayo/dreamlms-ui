@@ -5,16 +5,21 @@ type DashboardStatCardProps = {
   icon: IconDefinition;
   value: string;
   label: string;
+  color: string;
 };
 
 function DashboardStatCard({
   icon,
   value,
   label,
+  color,
 }: DashboardStatCardProps) {
   return (
     <div className="dashboard-stat-card">
-      <div className="dashboard-stat-icon">
+      <div
+        className="dashboard-stat-icon"
+        style={{ color }}
+      >
         <FontAwesomeIcon icon={icon} />
       </div>
 

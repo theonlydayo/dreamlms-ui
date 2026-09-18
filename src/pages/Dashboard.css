@@ -99,6 +99,24 @@
   font-size: 14px;
 }
 
+.dashboard-sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashboard-sidebar a svg,
+.dashboard-logout svg {
+  width: 16px;
+  color: #000000;
+}
+
+.dashboard-logout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .dashboard-sidebar a:hover,
 .dashboard-sidebar a.active {
   background: #fff1f3;
@@ -121,6 +139,25 @@
 .dashboard-logout:hover {
   background: #fff1f3;
   color: #f66962;
+}
+
+.dashboard-header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.dashboard-menu-button {
+  display: none;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  color: #222222;
+}
+
+.dashboard-sidebar-close {
+  display: none;
 }
 
 .dashboard-main {
@@ -361,30 +398,12 @@
     padding: 0 20px;
   }
 
-  .dashboard-sidebar {
-    width: 210px;
-  }
-
   .dashboard-main {
     padding: 30px 20px;
   }
 
-  .dashboard-courses {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 600px) {
-  .dashboard-header {
-    height: 70px;
-  }
-
-  .dashboard-logo img {
-    width: 125px;
-  }
-
-  .dashboard-user div {
-    display: none;
+  .dashboard-menu-button {
+    display: block;
   }
 
   .dashboard-layout {
@@ -392,19 +411,53 @@
   }
 
   .dashboard-sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid #eeeeee;
-    padding: 15px;
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 270px;
+    height: 100vh;
+    z-index: 1000;
+    padding: 30px 20px;
+    border-right: 1px solid #eeeeee;
+    transition: left 0.3s ease;
+    overflow-y: auto;
   }
 
-  .dashboard-sidebar nav {
-    display: grid;
+  .dashboard-sidebar-open {
+    left: 0;
+  }
+
+  .dashboard-sidebar-close {
+    display: flex;
+    margin-left: auto;
+    margin-bottom: 20px;
+    border: none;
+    background: transparent;
+    color: #222222;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  .dashboard-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 999;
+  }
+
+  .dashboard-courses {
     grid-template-columns: repeat(2, 1fr);
   }
+}
 
-  .dashboard-sidebar-title {
-    grid-column: 1 / -1;
+@media (max-width: 600px) {
+  .dashboard-header {
+    height: 70px;
+    padding: 0 15px;
+  }
+
+  .dashboard-logo img {
+    width: 125px;
   }
 
   .dashboard-main {
@@ -416,6 +469,10 @@
   }
 
   .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-courses {
     grid-template-columns: 1fr;
   }
 

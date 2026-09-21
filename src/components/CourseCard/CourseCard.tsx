@@ -9,6 +9,7 @@ type CourseCardProps = {
   students: number;
   rating: number;
   price: string;
+  slug: string;
 };
 
 function CourseCard({
@@ -20,6 +21,7 @@ function CourseCard({
   students,
   rating,
   price,
+  slug,
 }: CourseCardProps) {
   return (
     <div className="course-card">
@@ -29,7 +31,6 @@ function CourseCard({
 
       <div className="course-content">
         <span>{category}</span>
-
         <h3>{title}</h3>
 
         <div className="course-info">
@@ -44,7 +45,10 @@ function CourseCard({
 
         <div className="course-footer">
           <strong>{price}</strong>
-          <Link to="/courses">Buy Now</Link>
+
+          <Link to={`/courses/${slug}`}>
+            View Course
+          </Link>
         </div>
       </div>
     </div>

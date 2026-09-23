@@ -1,0 +1,34 @@
+.instructor-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+}
+
+.instructor-stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: #f1effc;
+  color: #6850e3;
+  font-size: 20px;
+}
+
+.instructor-stat-card span {
+  display: block;
+  margin-bottom: 5px;
+  color: #777;
+  font-size: 13px;
+}
+
+.instructor-stat-card strong {
+  display: block;
+  color: #392c7d;
+  font-size: 24px;
+}

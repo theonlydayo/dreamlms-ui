@@ -8,6 +8,10 @@ import "./Auth.css";
 function Register() {
   const navigate = useNavigate();
 
+  const [registerType, setRegisterType] = useState<
+    "student" | "instructor"
+  >("student");
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -57,6 +61,7 @@ function Register() {
             name: formData.name,
             email: formData.email,
             password: formData.password,
+            role: registerType,
           }),
         }
       );
@@ -82,8 +87,41 @@ function Register() {
   return (
     <AuthLayout description="Platform designed to help organisations, educators and learners manage, deliver and track learning and training activities.">
       <div className="auth-heading">
-        <h2>Create an account</h2>
-        <p>Join Dreams LMS and start your learning journey.</p>
+        <h2>
+          {registerType === "student"
+            ? "Create a student account"
+            : "Create an instructor account"}
+        </h2>
+
+        <p>
+          {registerType === "student"
+            ? "Join Dreams LMS and start your learning journey."
+            : "Join Dreams LMS and start creating courses."}
+        </p>
+      </div>
+
+      <div className="login-type-switch">
+        <button
+          type="button"
+          className={registerType === "student" ? "active" : ""}
+          onClick={() => {
+            setRegisterType("student");
+            setError("");
+          }}
+        >
+          Student
+        </button>
+
+        <button
+          type="button"
+          className={registerType === "instructor" ? "active" : ""}
+          onClick={() => {
+            setRegisterType("instructor");
+            setError("");
+          }}
+        >
+          Instructor
+        </button>
       </div>
 
       {error && <p className="auth-error">{error}</p>}
@@ -156,13 +194,18 @@ function Register() {
           </label>
         </div>
 
-        <button type="submit" className="auth-button" disabled={loading}>
+        <button
+          type="submit"
+          className="auth-button"
+          disabled={loading}
+        >
           {loading ? "Creating Account..." : "Create Account"}
         </button>
       </form>
 
       <p className="auth-switch">
-        Already have an account? <Link to="/login">Login</Link>
+        Already have an account?{" "}
+        <Link to="/login">Login</Link>
       </p>
     </AuthLayout>
   );

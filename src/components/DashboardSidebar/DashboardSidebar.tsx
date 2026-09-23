@@ -12,6 +12,7 @@ import {
   faGear,
   faRightFromBracket,
   faXmark,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../context/AuthContext";
 
@@ -25,7 +26,9 @@ function DashboardSidebar({
   onClose,
 }: DashboardSidebarProps) {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
+
+  const isInstructor = user?.role === "instructor";
 
   const handleLogout = () => {
     logout();
@@ -63,46 +66,82 @@ function DashboardSidebar({
             Home
           </NavLink>
 
-          <NavLink to="/dashboard" onClick={onClose}>
+          <NavLink
+            to={
+              isInstructor
+                ? "/instructor/dashboard"
+                : "/dashboard"
+            }
+            onClick={onClose}
+          >
             <FontAwesomeIcon icon={faGauge} />
             Dashboard
           </NavLink>
 
-          <NavLink to="/courses" onClick={onClose}>
+          <NavLink
+            to={isInstructor ? "/instructor/courses" : "/courses"}
+            onClick={onClose}
+          >
             <FontAwesomeIcon icon={faBookOpen} />
             My Courses
           </NavLink>
 
-          <NavLink to="/wishlist" onClick={onClose}>
-            <FontAwesomeIcon icon={faHeart} />
-            Wishlist
-          </NavLink>
+          {!isInstructor && (
+            <NavLink to="/wishlist" onClick={onClose}>
+              <FontAwesomeIcon icon={faHeart} />
+              Wishlist
+            </NavLink>
+          )}
 
-          <p className="dashboard-sidebar-title">LEARNING</p>
+          {isInstructor && (
+            <NavLink to="/instructor/students" onClick={onClose}>
+              <FontAwesomeIcon icon={faUsers} />
+              Students
+            </NavLink>
+          )}
+
+          <p className="dashboard-sidebar-title">
+            {isInstructor ? "MANAGEMENT" : "LEARNING"}
+          </p>
 
           <NavLink to="/messages" onClick={onClose}>
             <FontAwesomeIcon icon={faMessage} />
             Messages
           </NavLink>
 
-          <NavLink to="/reviews" onClick={onClose}>
+          <NavLink
+            to={isInstructor ? "/instructor/reviews" : "/reviews"}
+            onClick={onClose}
+          >
             <FontAwesomeIcon icon={faStar} />
             Reviews
           </NavLink>
 
-          <NavLink to="/quiz" onClick={onClose}>
-            <FontAwesomeIcon icon={faClipboardQuestion} />
-            Quiz Attempts
-          </NavLink>
+          {!isInstructor && (
+            <NavLink to="/quiz" onClick={onClose}>
+              <FontAwesomeIcon icon={faClipboardQuestion} />
+              Quiz Attempts
+            </NavLink>
+          )}
 
           <p className="dashboard-sidebar-title">ACCOUNT</p>
 
-          <NavLink to="/profile" onClick={onClose}>
+          <NavLink
+            to={isInstructor ? "/instructor/profile" : "/profile"}
+            onClick={onClose}
+          >
             <FontAwesomeIcon icon={faUser} />
             My Profile
           </NavLink>
 
-          <NavLink to="/settings" onClick={onClose}>
+          <NavLink
+            to={
+              isInstructor
+                ? "/instructor/settings"
+                : "/settings"
+            }
+            onClick={onClose}
+          >
             <FontAwesomeIcon icon={faGear} />
             Settings
           </NavLink>

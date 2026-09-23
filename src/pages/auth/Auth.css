@@ -268,6 +268,56 @@
   font-size: 13px;
 }
 
+.login-type-switch {
+  display: flex;
+  position: relative;
+  gap: 4px;
+  padding: 5px;
+  margin-bottom: 28px;
+  background: #f7f6fb;
+  border: 1px solid #ebe9f3;
+  border-radius: 10px;
+  box-shadow: inset 0 1px 2px rgba(20, 16, 50, 0.04);
+}
+
+.login-type-switch button {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  border: none;
+  padding: 11px 16px;
+  border-radius: 7px;
+  background: transparent;
+  color: #77738a;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.login-type-switch button:hover {
+  color: #392c7d;
+}
+
+.login-type-switch button.active {
+  background: #ffffff;
+  color: #392c7d;
+  box-shadow: 0 3px 10px rgba(57, 44, 125, 0.12);
+}
+
+.login-type-switch button.active::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  width: 18px;
+  height: 2px;
+  border-radius: 10px;
+  background: #6850e3;
+  transform: translateX(-50%);
+}
+
 @media (max-width: 1000px) {
   .auth-left {
     padding: 25px 35px;

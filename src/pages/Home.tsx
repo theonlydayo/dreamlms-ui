@@ -167,6 +167,7 @@ function Home() {
                 students={30}
                 rating={4.8}
                 price="$49"
+                slug="ui-ux-design-fundamentals"
               />
 
               <CourseCard
@@ -178,6 +179,7 @@ function Home() {
                 students={25}
                 rating={4.9}
                 price="$39"
+                slug="wordpress-for-beginners"
               />
 
               <CourseCard
@@ -189,6 +191,7 @@ function Home() {
                 students={50}
                 rating={5.0}
                 price="Free"
+                slug="sketch-from-a-to-z"
               />
 
               <CourseCard
@@ -200,6 +203,7 @@ function Home() {
                 students={31}
                 rating={4.8}
                 price="$45"
+                slug="angular-fundamentals"
               />
 
               <CourseCard
@@ -211,6 +215,7 @@ function Home() {
                 students={30}
                 rating={4.7}
                 price="Free"
+                slug="cp-developers-visual-studio"
               />
 
               <CourseCard
@@ -222,6 +227,7 @@ function Home() {
                 students={25}
                 rating={4.9}
                 price="$59"
+                slug="responsive-real-world-websites"
               />
             </div>
 

@@ -11,6 +11,8 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Courses from "./pages/Courses";
 import CourseDetails from "./pages/CourseDetails";
+import InstructorDashboard from "./pages/instructor/InstructorDashboard";
+import CreateCourse from "./pages/instructor/CreateCourse";
 
 function App() {
   return (
@@ -29,6 +31,17 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/courses/:slug" element={<CourseDetails />} />
+          </Route>
+
+          <Route element={<ProtectedRoute allowedRole="instructor" />}>
+            <Route
+              path="/instructor/dashboard"
+              element={<InstructorDashboard />}
+            />
+            <Route
+              path="/instructor/courses/create"
+              element={<CreateCourse />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>

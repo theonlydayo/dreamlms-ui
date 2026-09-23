@@ -12,6 +12,9 @@ function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
 
   const initial = user?.name?.charAt(0).toUpperCase() || "U";
 
+  const role =
+    user?.role === "instructor" ? "Instructor" : "Student";
+
   return (
     <header className="dashboard-header">
       <div className="dashboard-header-left">
@@ -29,12 +32,13 @@ function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
         </Link>
       </div>
 
-      <Link to="/profile" className="dashboard-user">
+      <Link to={user?.role === "instructor" ? "/instructor/dashboard" : "/dashboard"}
+  className="dashboard-user">
         <div className="dashboard-avatar">{initial}</div>
 
         <div>
           <strong>{user?.name}</strong>
-          <small>Student</small>
+          <small>{role}</small>
         </div>
       </Link>
     </header>

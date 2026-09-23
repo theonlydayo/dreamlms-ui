@@ -10,6 +10,10 @@ function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
+  const [loginType, setLoginType] = useState<"student" | "instructor">(
+    "student"
+  );
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -43,7 +47,10 @@ function Login() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            ...formData,
+            role: loginType,
+          }),
         }
       );
 
@@ -51,6 +58,12 @@ function Login() {
 
       if (!response.ok) {
         throw new Error(data.message || "Login failed");
+      }
+
+      if (data.user.role !== loginType) {
+        throw new Error(
+          `This account does not have ${loginType} access.`
+        );
       }
 
       login(data.token, data.user);
@@ -61,7 +74,11 @@ function Login() {
         localStorage.removeItem("rememberMe");
       }
 
-      navigate("/dashboard");
+      if (loginType === "instructor") {
+        navigate("/instructor/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error) {
       setError(
         error instanceof Error
@@ -76,8 +93,41 @@ function Login() {
   return (
     <AuthLayout description="Platform designed to help organisations, educators and learners manage, deliver and track learning and training activities.">
       <div className="auth-heading">
-        <h2>Welcome back!</h2>
-        <p>Sign in to continue learning with Dreams LMS.</p>
+        <h2>
+          {loginType === "student"
+            ? "Student Login"
+            : "Instructor Login"}
+        </h2>
+
+        <p>
+          {loginType === "student"
+            ? "Sign in to continue learning with Dreams LMS."
+            : "Sign in to manage your courses with Dreams LMS."}
+        </p>
+      </div>
+
+      <div className="login-type-switch">
+        <button
+          type="button"
+          className={loginType === "student" ? "active" : ""}
+          onClick={() => {
+            setLoginType("student");
+            setError("");
+          }}
+        >
+          Student
+        </button>
+
+        <button
+          type="button"
+          className={loginType === "instructor" ? "active" : ""}
+          onClick={() => {
+            setLoginType("instructor");
+            setError("");
+          }}
+        >
+          Instructor
+        </button>
       </div>
 
       {error && <p className="auth-error">{error}</p>}
@@ -117,13 +167,20 @@ function Login() {
             <input
               type="checkbox"
               checked={rememberMe}
-              onChange={(event) => setRememberMe(event.target.checked)}
+              onChange={(event) =>
+                setRememberMe(event.target.checked)
+              }
             />
+
             <span>Remember me</span>
           </label>
         </div>
 
-        <button type="submit" className="auth-button" disabled={loading}>
+        <button
+          type="submit"
+          className="auth-button"
+          disabled={loading}
+        >
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>

@@ -32,7 +32,10 @@ function Header() {
         <div className="home-header-actions">
           {isAuthenticated ? (
             <>
-              <Link to="/dashboard" className="home-login">
+              <Link to={
+                user?.role === "instructor"
+                  ? "/instructor/dashboard"
+                  : "/dashboard"} className="home-login">
                 {user?.name}
               </Link>
 

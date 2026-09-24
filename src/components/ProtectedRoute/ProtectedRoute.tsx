@@ -6,7 +6,11 @@ type ProtectedRouteProps = {
 };
 
 function ProtectedRoute({ allowedRole }: ProtectedRouteProps) {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, isLoading, user } = useAuth();
+
+  if (isLoading) {
+    return null;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

@@ -20,6 +20,7 @@ type User = {
 type AuthContextType = {
   user: User | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (user: User) => void;
   logout: () => void;
 };
@@ -32,6 +33,7 @@ type AuthProviderProps = {
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getCurrentUser = async () => {
@@ -52,6 +54,8 @@ function AuthProvider({ children }: AuthProviderProps) {
         setUser(data.user);
       } catch {
         setUser(null);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -82,6 +86,7 @@ function AuthProvider({ children }: AuthProviderProps) {
       value={{
         user,
         isAuthenticated: Boolean(user),
+        isLoading,
         login,
         logout,
       }}

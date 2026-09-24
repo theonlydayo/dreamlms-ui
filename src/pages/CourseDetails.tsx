@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import {
   faCertificate,
   faInfinity,
@@ -20,39 +21,28 @@ import "./CourseDetails.css";
 function CourseDetails() {
   const { slug } = useParams();
 
-  const [course, setCourse] = useState<Course | null>(null);
-  const [curriculum, setCurriculum] =
-    useState<CourseCurriculum | null>(null);
-
-  const [loading, setLoading] = useState(true);
-  const [curriculumLoading, setCurriculumLoading] = useState(true);
-  const [error, setError] = useState("");
   const [openSection, setOpenSection] = useState<number | null>(1);
 
-  useEffect(() => {
-    const fetchCourse = async () => {
-      if (!slug) return;
+  const {
+    data: course,
+    isLoading: loading,
+    error: courseError,
+  } = useQuery<Course, Error>({
+    queryKey: ["course", slug],
+    queryFn: () => getCourseBySlug(slug!),
+    enabled: !!slug,
+  });
 
-      try {
-        const data = await getCourseBySlug(slug);
-        setCourse(data);
+  const {
+    data: curriculum,
+    isLoading: curriculumLoading,
+  } = useQuery<CourseCurriculum, Error>({
+    queryKey: ["course-curriculum", slug],
+    queryFn: () => getCourseCurriculum(slug!),
+    enabled: !!slug,
+  });
 
-        const curriculumData = await getCourseCurriculum(slug);
-        setCurriculum(curriculumData);
-      } catch (error) {
-        setError(
-          error instanceof Error
-            ? error.message
-            : "Failed to fetch course"
-        );
-      } finally {
-        setLoading(false);
-        setCurriculumLoading(false);
-      }
-    };
-
-    fetchCourse();
-  }, [slug]);
+  const error = courseError?.message || "";
 
   if (loading) {
     return (
@@ -77,8 +67,7 @@ function CourseDetails() {
         <main className="course-details-state">
           <h2>Course not found</h2>
           <p>
-            {error ||
-              "The course you're looking for doesn't exist."}
+            {error || "The course you're looking for doesn't exist."}
           </p>
 
           <Link to="/courses" className="back-courses-button">
@@ -251,9 +240,7 @@ function CourseDetails() {
             </div>
 
             {!curriculumLoading && curriculum && (
-              <p>
-                {curriculum.curriculum.length} sections
-              </p>
+              <p>{curriculum.curriculum.length} sections</p>
             )}
           </div>
 
@@ -291,9 +278,7 @@ function CourseDetails() {
 
                     <span
                       className={`curriculum-arrow ${
-                        openSection === section.order
-                          ? "open"
-                          : ""
+                        openSection === section.order ? "open" : ""
                       }`}
                     >
                       ⌄
@@ -307,16 +292,12 @@ function CourseDetails() {
                           className="curriculum-lesson"
                           key={lesson.id}
                         >
-                          <div className="lesson-icon">
-                            ▶
-                          </div>
+                          <div className="lesson-icon">▶</div>
 
                           <div className="lesson-info">
                             <strong>{lesson.title}</strong>
 
-                            <span>
-                              {lesson.description}
-                            </span>
+                            <span>{lesson.description}</span>
                           </div>
 
                           <span className="lesson-duration">

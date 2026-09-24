@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBookOpen,
@@ -25,49 +26,40 @@ type InstructorCourse = {
   level: string;
 };
 
+type InstructorCoursesResponse = {
+  courses: InstructorCourse[];
+};
+
 function InstructorDashboard() {
-  const { user, token } = useAuth();
+  const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [courses, setCourses] = useState<InstructorCourse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchCourses = async () => {
-      if (!token) {
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/courses/instructor`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to fetch courses");
+  const {
+    data,
+    isLoading,
+    error,
+  } = useQuery<InstructorCoursesResponse, Error>({
+    queryKey: ["instructor-courses"],
+    queryFn: async () => {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/courses/instructor`,
+        {
+          credentials: "include",
         }
+      );
 
-        setCourses(data.courses);
-      } catch (error) {
-        setError(
-          error instanceof Error
-            ? error.message
-            : "Failed to fetch courses"
-        );
-      } finally {
-        setIsLoading(false);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to fetch courses");
       }
-    };
 
-    fetchCourses();
-  }, [token]);
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  const courses = data?.courses ?? [];
 
   const publishedCourses = courses.filter(
     (course) => course.status === "published"
@@ -137,13 +129,9 @@ function InstructorDashboard() {
               <button type="button">View All</button>
             </div>
 
-            {isLoading && (
-              <p>Loading courses...</p>
-            )}
+            {isLoading && <p>Loading courses...</p>}
 
-            {error && (
-              <p>{error}</p>
-            )}
+            {error && <p>{error.message}</p>}
 
             {!isLoading && !error && courses.length === 0 && (
               <p>You haven't created any courses yet.</p>

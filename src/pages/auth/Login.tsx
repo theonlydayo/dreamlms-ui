@@ -47,6 +47,7 @@ function Login() {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({
             ...formData,
             role: loginType,
@@ -66,7 +67,7 @@ function Login() {
         );
       }
 
-      login(data.token, data.user);
+      login(data.user);
 
       if (rememberMe) {
         localStorage.setItem("rememberMe", "true");

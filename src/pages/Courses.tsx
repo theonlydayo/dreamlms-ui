@@ -1,34 +1,20 @@
-import { useEffect, useState } from "react";
 import Header from "../components/Header/Header";
 import CourseCard from "../components/CourseCard/CourseCard";
 import Footer from "../components/Footer/Footer";
 import { getCourses } from "../services/courseService";
 import type { Course } from "../types/course";
+import { useQuery } from "@tanstack/react-query";
 import "./Courses.css";
 
 function Courses() {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const data = await getCourses();
-        setCourses(data);
-      } catch (error) {
-        setError(
-          error instanceof Error
-            ? error.message
-            : "Failed to fetch courses"
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCourses();
-  }, []);
+  const {
+    data: courses = [],
+    isLoading,
+    error,
+  } = useQuery<Course[], Error>({
+    queryKey: ["courses"],
+    queryFn: getCourses,
+  });
 
   return (
     <div className="courses-page">
@@ -40,15 +26,15 @@ function Courses() {
           <p>Learn new skills and grow your knowledge.</p>
         </div>
 
-        {loading && <p>Loading courses...</p>}
+        {isLoading && <p>Loading courses...</p>}
 
-        {error && <p>{error}</p>}
+        {error && <p>{error.message}</p>}
 
-        {!loading && !error && courses.length === 0 && (
+        {!isLoading && !error && courses.length === 0 && (
           <p>No courses available.</p>
         )}
 
-        {!loading && !error && courses.length > 0 && (
+        {!isLoading && !error && courses.length > 0 && (
           <div className="courses-grid">
             {courses.map((course) => (
               <CourseCard

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext";
 import DashboardHeader from "../components/DashboardHeader/DashboardHeader";
 import DashboardSidebar from "../components/DashboardSidebar/DashboardSidebar";
@@ -6,10 +7,9 @@ import Footer from "../components/Footer/Footer";
 import "./Profile.css";
 
 function Profile() {
-  const { user, token, login } = useAuth();
+  const { user, login } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
@@ -17,6 +17,41 @@ function Profile() {
     phone: user?.phone || "",
     gender: user?.gender || "",
     bio: user?.bio || "",
+  });
+
+  const updateProfileMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/profile`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to update profile");
+      }
+
+      return data;
+    },
+    onSuccess: (data) => {
+      login(data.user);
+      setIsEditing(false);
+    },
+    onError: (error) => {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again."
+      );
+    },
   });
 
   const initial = user?.name?.charAt(0).toUpperCase() || "U";
@@ -66,43 +101,12 @@ function Profile() {
     setError("");
   };
 
-  const handleSave = async () => {
-    if (!token) return;
-
-    try {
-      setLoading(true);
-      setError("");
-
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/profile`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to update profile");
-      }
-
-      login(token, data.user);
-      setIsEditing(false);
-    } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong. Please try again."
-      );
-    } finally {
-      setLoading(false);
-    }
+  const handleSave = () => {
+    setError("");
+    updateProfileMutation.mutate();
   };
+
+  const loading = updateProfileMutation.isPending;
 
   return (
     <div className="dashboard-page">

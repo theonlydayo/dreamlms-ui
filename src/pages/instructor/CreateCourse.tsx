@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
@@ -8,18 +9,14 @@ import {
 import DashboardHeader from "../../components/DashboardHeader/DashboardHeader";
 import DashboardSidebar from "../../components/DashboardSidebar/DashboardSidebar";
 import Footer from "../../components/Footer/Footer";
-import { useAuth } from "../../context/AuthContext";
 import "./CreateCourse.css";
 
 function CreateCourse() {
   const navigate = useNavigate();
-  const { token } = useAuth();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
@@ -30,91 +27,16 @@ function CreateCourse() {
     level: "Beginner",
   });
 
-  const handleChange = (
-    event: ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = event.target;
-
-    setFormData((previous) => ({
-      ...previous,
-      [name]: value,
-    }));
-  };
-
-  const handleImageChange = async (
-    event: ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-
-    if (!file) {
-      return;
-    }
-
-    setSelectedImage(file);
-    setIsUploading(true);
-    setError("");
-
-    try {
-      const uploadData = new FormData();
-      uploadData.append("image", file);
-
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/uploads/course-image`,
-        {
-          method: "POST",
-          body: uploadData,
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to upload image");
-      }
-
-      setImageUrl(data.imageUrl);
-    } catch (error) {
-      setSelectedImage(null);
-      setImageUrl("");
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Failed to upload image"
-      );
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  const handleSubmit = async (
-    event: FormEvent<HTMLFormElement>
-  ) => {
-    event.preventDefault();
-
-    if (!token) {
-      setError("You must be logged in to create a course.");
-      return;
-    }
-
-    if (!imageUrl) {
-      setError("Please upload a course thumbnail.");
-      return;
-    }
-
-    setIsCreating(true);
-    setError("");
-
-    try {
+  const createCourseMutation = useMutation({
+    mutationFn: async () => {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/courses`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
+          credentials: "include",
           body: JSON.stringify({
             title: formData.title,
             description: formData.description,
@@ -132,17 +54,90 @@ function CreateCourse() {
         throw new Error(data.message || "Failed to create course");
       }
 
+      return data;
+    },
+    onSuccess: () => {
       navigate("/instructor/dashboard");
-    } catch (error) {
+    },
+  });
+
+  const uploadImageMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const uploadData = new FormData();
+      uploadData.append("image", file);
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/uploads/course-image`,
+        {
+          method: "POST",
+          body: uploadData,
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to upload image");
+      }
+
+      return data.imageUrl;
+    },
+    onSuccess: (url) => {
+      setImageUrl(url);
+    },
+    onError: (error) => {
+      setSelectedImage(null);
+      setImageUrl("");
       setError(
         error instanceof Error
           ? error.message
-          : "Failed to create course"
+          : "Failed to upload image"
       );
-    } finally {
-      setIsCreating(false);
-    }
+    },
+  });
+
+  const handleChange = (
+    event: ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = event.target;
+
+    setFormData((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
   };
+
+  const handleImageChange = (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    setSelectedImage(file);
+    setError("");
+    uploadImageMutation.mutate(file);
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!imageUrl) {
+      setError("Please upload a course thumbnail.");
+      return;
+    }
+
+    setError("");
+    createCourseMutation.mutate();
+  };
+
+  const isCreating = createCourseMutation.isPending;
+  const isUploading = uploadImageMutation.isPending;
+  const mutationError = createCourseMutation.error;
 
   return (
     <div className="dashboard-page">
@@ -326,9 +321,9 @@ function CreateCourse() {
               </div>
             </section>
 
-            {error && (
+            {(error || mutationError) && (
               <p className="create-course-error">
-                {error}
+                {error || mutationError?.message}
               </p>
             )}
 

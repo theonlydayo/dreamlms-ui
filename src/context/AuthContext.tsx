@@ -1,6 +1,7 @@
 import {
   createContext,
   useContext,
+  useEffect,
   useState,
   type ReactNode,
 } from "react";
@@ -15,11 +16,11 @@ type User = {
   bio: string;
   createdAt: string;
 };
+
 type AuthContextType = {
   user: User | null;
-  token: string | null;
   isAuthenticated: boolean;
-  login: (token: string, user: User) => void;
+  login: (user: User) => void;
   logout: () => void;
 };
 
@@ -30,39 +31,57 @@ type AuthProviderProps = {
 };
 
 function AuthProvider({ children }: AuthProviderProps) {
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("token")
-  );
+  const [user, setUser] = useState<User | null>(null);
 
-  const [user, setUser] = useState<User | null>(() => {
-    const storedUser = localStorage.getItem("user");
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/auth/me`,
+          {
+            credentials: "include",
+          }
+        );
 
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
+        if (!response.ok) {
+          setUser(null);
+          return;
+        }
 
-  const login = (newToken: string, newUser: User) => {
-    localStorage.setItem("token", newToken);
-    localStorage.setItem("user", JSON.stringify(newUser));
+        const data = await response.json();
+        setUser(data.user);
+      } catch {
+        setUser(null);
+      }
+    };
 
-    setToken(newToken);
+    getCurrentUser();
+  }, []);
+
+  const login = (newUser: User) => {
     setUser(newUser);
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("rememberMe");
-
-    setToken(null);
-    setUser(null);
+  const logout = async () => {
+    try {
+      await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/logout`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
+    } finally {
+      localStorage.removeItem("rememberMe");
+      setUser(null);
+    }
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        token,
-        isAuthenticated: Boolean(token),
+        isAuthenticated: Boolean(user),
         login,
         logout,
       }}

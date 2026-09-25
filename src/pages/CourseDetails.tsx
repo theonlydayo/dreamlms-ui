@@ -1,6 +1,10 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { Link, useLocation, useParams } from "react-router-dom";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   faCertificate,
   faInfinity,
@@ -13,13 +17,25 @@ import Footer from "../components/Footer/Footer";
 import {
   getCourseBySlug,
   getCourseCurriculum,
+  getInstructorCourse,
+  getInstructorCoursePreview,
 } from "../services/courseService";
+import {
+  enrollInCourse,
+  getEnrollmentStatus,
+} from "../services/enrollmentService";
+import { useAuth } from "../context/AuthContext";
 import type { Course } from "../types/course";
 import type { CourseCurriculum } from "../services/courseService";
 import "./CourseDetails.css";
 
 function CourseDetails() {
   const { slug } = useParams();
+  const location = useLocation();
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+
+  const isPreview = location.pathname.endsWith("/preview");
 
   const [openSection, setOpenSection] = useState<number | null>(1);
 
@@ -28,8 +44,11 @@ function CourseDetails() {
     isLoading: loading,
     error: courseError,
   } = useQuery<Course, Error>({
-    queryKey: ["course", slug],
-    queryFn: () => getCourseBySlug(slug!),
+    queryKey: [isPreview ? "instructor-course" : "course", slug],
+    queryFn: () =>
+      isPreview
+        ? getInstructorCourse(slug!)
+        : getCourseBySlug(slug!),
     enabled: !!slug,
   });
 
@@ -37,9 +56,42 @@ function CourseDetails() {
     data: curriculum,
     isLoading: curriculumLoading,
   } = useQuery<CourseCurriculum, Error>({
-    queryKey: ["course-curriculum", slug],
-    queryFn: () => getCourseCurriculum(slug!),
+    queryKey: [
+      isPreview
+        ? "instructor-course-preview"
+        : "course-curriculum",
+      slug,
+    ],
+    queryFn: () =>
+      isPreview
+        ? getInstructorCoursePreview(slug!)
+        : getCourseCurriculum(slug!),
     enabled: !!slug,
+  });
+
+  const {
+    data: enrollmentStatus,
+    isLoading: enrollmentStatusLoading,
+  } = useQuery({
+    queryKey: ["enrollment-status", slug],
+    queryFn: () => getEnrollmentStatus(slug!),
+    enabled:
+      !!slug &&
+      !isPreview &&
+      user?.role === "student",
+  });
+
+  const enrollMutation = useMutation({
+    mutationFn: () => enrollInCourse(slug!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["student-dashboard"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["enrollment-status", slug],
+      });
+    },
   });
 
   const error = courseError?.message || "";
@@ -66,12 +118,16 @@ function CourseDetails() {
 
         <main className="course-details-state">
           <h2>Course not found</h2>
+
           <p>
             {error || "The course you're looking for doesn't exist."}
           </p>
 
-          <Link to="/courses" className="back-courses-button">
-            Back to Courses
+          <Link
+            to="/instructor/dashboard"
+            className="back-courses-button"
+          >
+            Back to Dashboard
           </Link>
         </main>
 
@@ -128,7 +184,10 @@ function CourseDetails() {
               <img src={course.image} alt={course.title} />
 
               <div className="preview-overlay">
-                <button type="button" className="preview-button">
+                <button
+                  type="button"
+                  className="preview-button"
+                >
                   <FontAwesomeIcon icon={faPlay} />
                 </button>
 
@@ -141,9 +200,45 @@ function CourseDetails() {
                 ₦{course.price.toLocaleString()}
               </div>
 
-              <button type="button" className="enroll-button">
-                Enroll Now
-              </button>
+              {!isPreview && user?.role === "student" && (
+                <>
+                  {enrollmentStatusLoading ? (
+                    <p>Checking enrollment...</p>
+                  ) : enrollmentStatus?.enrolled ? (
+                    <p className="enrollment-success">
+                      You are enrolled in this course.
+                    </p>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        className="enroll-button"
+                        onClick={() => enrollMutation.mutate()}
+                        disabled={enrollMutation.isPending}
+                      >
+                        {enrollMutation.isPending
+                          ? "Enrolling..."
+                          : "Enroll Now"}
+                      </button>
+
+                      {enrollMutation.isError && (
+                        <p className="enrollment-error">
+                          {enrollMutation.error.message}
+                        </p>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+
+              {isPreview && (
+                <Link
+                  to={`/instructor/courses/${course.slug}/edit`}
+                  className="enroll-button"
+                >
+                  Edit Course
+                </Link>
+              )}
 
               <p className="guarantee">
                 30-Day Money-Back Guarantee
@@ -278,7 +373,9 @@ function CourseDetails() {
 
                     <span
                       className={`curriculum-arrow ${
-                        openSection === section.order ? "open" : ""
+                        openSection === section.order
+                          ? "open"
+                          : ""
                       }`}
                     >
                       ⌄
@@ -292,12 +389,16 @@ function CourseDetails() {
                           className="curriculum-lesson"
                           key={lesson.id}
                         >
-                          <div className="lesson-icon">▶</div>
+                          <div className="lesson-icon">
+                            ▶
+                          </div>
 
                           <div className="lesson-info">
                             <strong>{lesson.title}</strong>
 
-                            <span>{lesson.description}</span>
+                            <span>
+                              {lesson.description}
+                            </span>
                           </div>
 
                           <span className="lesson-duration">

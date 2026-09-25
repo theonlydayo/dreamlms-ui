@@ -1,41 +1,82 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 
 function Header() {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
 
   const handleLogout = () => {
     logout();
+    closeMenu();
     navigate("/login");
   };
 
   return (
     <header className="home-header">
       <div className="home-header-container">
-        <Link to="/" className="home-logo">
+        <button
+          type="button"
+          className="home-menu-button"
+          onClick={() => setMenuOpen((previous) => !previous)}
+          aria-label="Toggle navigation menu"
+        >
+          {menuOpen ? "×" : "☰"}
+        </button>
+
+        <Link to="/" className="home-logo" onClick={closeMenu}>
           <img src="/images/home-logo.svg" alt="Dreams LMS" />
         </Link>
 
-        <nav className="home-nav">
-          <Link to="/" className="active">
+        <nav className={`home-nav ${menuOpen ? "open" : ""}`}>
+          <NavLink to="/" end onClick={closeMenu}>
             Home
-          </Link>
+          </NavLink>
 
-          <Link to="/courses">Courses</Link>
-          <Link to="/dashboard">Dashboard</Link>
-          <Link to="/pricing">Pricing</Link>
-          <Link to="/blogs">Blogs</Link>
-          <Link to="/contact">Contact</Link>
+          <NavLink to="/courses" onClick={closeMenu}>
+            Courses
+          </NavLink>
+
+          <NavLink
+            to={
+              isAuthenticated && user?.role === "instructor"
+                ? "/instructor/dashboard"
+                : "/dashboard"
+            }
+            onClick={closeMenu}
+          >
+            Dashboard
+          </NavLink>
+
+          <NavLink to="/pricing" onClick={closeMenu}>
+            Pricing
+          </NavLink>
+
+          <NavLink to="/blogs" onClick={closeMenu}>
+            Blogs
+          </NavLink>
+
+          <NavLink to="/contact" onClick={closeMenu}>
+            Contact
+          </NavLink>
         </nav>
 
         <div className="home-header-actions">
           {isAuthenticated ? (
             <>
-              <Link to={
-                user?.role === "instructor"
-                  ? "/instructor/dashboard"
-                  : "/dashboard"} className="home-login">
+              <Link
+                to={
+                  user?.role === "instructor"
+                    ? "/instructor/dashboard"
+                    : "/dashboard"
+                }
+                className="home-login"
+              >
                 {user?.name}
               </Link>
 

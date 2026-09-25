@@ -13,6 +13,7 @@ import Courses from "./pages/Courses";
 import CourseDetails from "./pages/CourseDetails";
 import InstructorDashboard from "./pages/instructor/InstructorDashboard";
 import CreateCourse from "./pages/instructor/CreateCourse";
+import EditCourse from "./pages/instructor/EditCourse";
 
 function App() {
   return (
@@ -38,9 +39,20 @@ function App() {
               path="/instructor/dashboard"
               element={<InstructorDashboard />}
             />
+
             <Route
               path="/instructor/courses/create"
               element={<CreateCourse />}
+            />
+
+            <Route
+              path="/instructor/courses/:slug/edit"
+              element={<EditCourse />}
+            />
+
+            <Route
+              path="/courses/:slug/preview"
+              element={<CourseDetails />}
             />
           </Route>
         </Routes>

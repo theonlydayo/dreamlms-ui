@@ -467,6 +467,35 @@
   padding: 20px 0;
 }
 
+.enrollment-success {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 18px;
+  padding: 12px 14px;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  background: #f0fdf4;
+  color: #15803d;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.enrollment-success::before {
+  content: "✓";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #22c55e;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 @keyframes course-loading {
   to {
     transform: rotate(360deg);

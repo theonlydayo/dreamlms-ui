@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUsers,
   faBookOpen,
+  faEye,
+  faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
 
 type InstructorCourseCardProps = {
@@ -37,21 +39,34 @@ function InstructorCourseCard({
         <h3>{title}</h3>
 
         <div className="instructor-course-meta">
-            <span>
-                <FontAwesomeIcon icon={faUsers} />
-                {students} Students
-            </span>
+          <span>
+            <FontAwesomeIcon icon={faUsers} />
+            {students} Students
+          </span>
 
-            <span>
-                <FontAwesomeIcon icon={faBookOpen} />
-                {lessons} Lessons
-            </span>
+          <span>
+            <FontAwesomeIcon icon={faBookOpen} />
+            {lessons} Lessons
+          </span>
         </div>
 
         <div className="instructor-course-actions">
-          <Link to={`/courses/${slug}`}>View Course</Link>
+          {status === "Published" ? (
+            <Link to={`/courses/${slug}`}>
+              <FontAwesomeIcon icon={faEye} />
+              View Course
+            </Link>
+          ) : (
+            <Link to={`/courses/${slug}/preview`}>
+              <FontAwesomeIcon icon={faEye} />
+              Preview
+            </Link>
+          )}
 
-          <button type="button">Edit</button>
+          <Link to={`/instructor/courses/${slug}/edit`}>
+            <FontAwesomeIcon icon={faPenToSquare} />
+            Edit
+          </Link>
         </div>
       </div>
     </article>

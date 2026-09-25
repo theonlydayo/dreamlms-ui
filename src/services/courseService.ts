@@ -52,6 +52,7 @@ export type CourseCurriculum = {
     image: string;
     price: number;
     level: string;
+    status: "draft" | "published";
   };
   curriculum: CurriculumSection[];
 };
@@ -68,4 +69,79 @@ export const getCourseCurriculum = async (
   }
 
   return response.json();
+};
+
+export const getInstructorCoursePreview = async (
+  slug: string
+): Promise<CourseCurriculum> => {
+  const response = await fetch(
+    `${API_URL}/api/courses/instructor/${slug}/preview`,
+    {
+      credentials: "include",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch course preview");
+  }
+
+  return response.json();
+};
+
+export const getInstructorCourse = async (
+  slug: string
+): Promise<Course> => {
+  const url = `${API_URL}/api/courses/instructor/${slug}`;
+
+  console.log("Instructor course URL:", url);
+
+  const response = await fetch(url, {
+    credentials: "include",
+  });
+
+  console.log("Response URL:", response.url);
+  console.log("Response status:", response.status);
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to fetch instructor course");
+  }
+
+  return data.course;
+};
+
+type UpdateCourseData = {
+  title: string;
+  description: string;
+  image: string;
+  category: string;
+  price: number;
+  level: string;
+  status: "draft" | "published";
+};
+
+export const updateInstructorCourse = async (
+  slug: string,
+  courseData: UpdateCourseData
+): Promise<Course> => {
+  const response = await fetch(
+    `${API_URL}/api/courses/instructor/${slug}`,
+    {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(courseData),
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to update course");
+  }
+
+  return data.course;
 };

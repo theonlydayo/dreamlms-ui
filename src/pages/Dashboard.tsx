@@ -6,7 +6,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../context/AuthContext";
+import { getStudentDashboard } from "../services/enrollmentService";
 import DashboardHeader from "../components/DashboardHeader/DashboardHeader";
 import DashboardSidebar from "../components/DashboardSidebar/DashboardSidebar";
 import DashboardStatCard from "../components/DashboardStatCard/DashboardStatCard";
@@ -16,15 +18,26 @@ import Footer from "../components/Footer/Footer";
 import "./Dashboard.css";
 
 function Dashboard() {
-    const { user } = useAuth();
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { user } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const {
+    data: dashboardData,
+    isLoading,
+  } = useQuery({
+    queryKey: ["student-dashboard"],
+    queryFn: getStudentDashboard,
+  });
 
   return (
     <div className="dashboard-page">
       <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
 
       <div className="dashboard-layout">
-        <DashboardSidebar isOpen={sidebarOpen}onClose={() => setSidebarOpen(false)} />
+        <DashboardSidebar
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
 
         <main className="dashboard-main">
           <div className="dashboard-welcome">
@@ -36,31 +49,47 @@ function Dashboard() {
 
           <section className="dashboard-stats">
             <DashboardStatCard
-                icon={faBookOpen}
-                value="08"
-                label="Enrolled Courses"
-                color="#f66962"
+              icon={faBookOpen}
+              value={
+                isLoading
+                  ? "..."
+                  : String(dashboardData?.stats.enrolledCourses ?? 0)
+              }
+              label="Enrolled Courses"
+              color="#f66962"
             />
 
             <DashboardStatCard
-                icon={faCirclePlay}
-                value="05"
-                label="Courses In Progress"
-                color="#3b82f6"
+              icon={faCirclePlay}
+              value={
+                isLoading
+                  ? "..."
+                  : String(dashboardData?.stats.inProgressCourses ?? 0)
+              }
+              label="Courses In Progress"
+              color="#3b82f6"
             />
 
             <DashboardStatCard
-                icon={faCircleCheck}
-                value="03"
-                label="Completed Courses"
-                color="#22c55e"
+              icon={faCircleCheck}
+              value={
+                isLoading
+                  ? "..."
+                  : String(dashboardData?.stats.completedCourses ?? 0)
+              }
+              label="Completed Courses"
+              color="#22c55e"
             />
 
             <DashboardStatCard
-                icon={faCertificate}
-                value="12"
-                label="Certificates"
-                color="#f59e0b"
+              icon={faCertificate}
+              value={
+                isLoading
+                  ? "..."
+                  : String(dashboardData?.stats.certificates ?? 0)
+              }
+              label="Certificates"
+              color="#f59e0b"
             />
           </section>
 
@@ -75,29 +104,22 @@ function Dashboard() {
             </div>
 
             <div className="dashboard-courses">
-              <DashboardCourseCard
-                image="/images/course-1.jpg"
-                category="Development"
-                title="React JS Development"
-                instructor="John Smith"
-                progress={75}
-              />
-
-              <DashboardCourseCard
-                image="/images/course-2.jpg"
-                category="Design"
-                title="UI/UX Design Fundamentals"
-                instructor="Sarah Williams"
-                progress={50}
-              />
-
-              <DashboardCourseCard
-                image="/images/course-3.jpg"
-                category="Development"
-                title="JavaScript Essentials"
-                instructor="Michael Brown"
-                progress={35}
-              />
+              {isLoading ? (
+                <p>Loading courses...</p>
+              ) : dashboardData?.courses.length ? (
+                dashboardData.courses.map((enrollment) => (
+                  <DashboardCourseCard
+                    key={enrollment.id}
+                    image={enrollment.course.image}
+                    category={enrollment.course.category.name}
+                    title={enrollment.course.title}
+                    instructor={enrollment.course.instructor.name}
+                    progress={enrollment.progress}
+                  />
+                ))
+              ) : (
+                <p>You are not enrolled in any courses yet.</p>
+              )}
             </div>
           </section>
 
